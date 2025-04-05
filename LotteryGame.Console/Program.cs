@@ -1,6 +1,6 @@
-﻿using LotteryGame;
-using LotteryGame.Services;
-using LotteryGame.Services.Interfaces;
+﻿using LotteryGame.Shared;
+using LotteryGame.Shared.Services;
+using LotteryGame.Shared.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,6 +19,7 @@ using var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((ctx, services) => {
         services.AddScoped<ILotteryGameService, LotteryGameService>();
         services.AddScoped<IGameLogicService, GameLogicService>();
+        services.AddScoped<ITicketService, TicketService>();
         services.AddSingleton<IRandomGenerator, RandomGenerator>();
         services.AddOptions<LotteryGameSettings>().Bind(configuration.GetSection("LotteryGameSettings")).ValidateDataAnnotations();
     })

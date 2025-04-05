@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
-using LotteryGame.Services;
+using LotteryGame.Shared;
+using LotteryGame.Shared.Services;
 
 namespace LotteryGame.UnitTests;
 

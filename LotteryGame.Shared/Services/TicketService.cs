@@ -1,6 +1,6 @@
-﻿using LotteryGame.Services.Interfaces;
+﻿using LotteryGame.Shared.Services.Interfaces;
 
-namespace LotteryGame.Services;
+namespace LotteryGame.Shared.Services;
 
 public class TicketService : ITicketService {
     public List<int> GetAllTicketsForGame(IEnumerable<Player> players) {

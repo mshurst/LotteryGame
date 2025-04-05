@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LotteryGame\LotteryGame.csproj" />
+    <ProjectReference Include="..\LotteryGame.Shared\LotteryGame.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

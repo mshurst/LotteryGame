@@ -1,6 +1,7 @@
 using FluentAssertions;
-using LotteryGame.Services;
-using LotteryGame.Services.Interfaces;
+using LotteryGame.Shared;
+using LotteryGame.Shared.Services;
+using LotteryGame.Shared.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LotteryGame {
+﻿namespace LotteryGame.Shared {
     public static class Extensions {
         private static Random random = new Random();
 

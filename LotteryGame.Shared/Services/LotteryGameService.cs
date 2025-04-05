@@ -1,15 +1,9 @@
-﻿using LotteryGame.Services.Interfaces;
-using Microsoft.Extensions.Hosting;
+﻿using LotteryGame.Shared.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace LotteryGame.Services {
+namespace LotteryGame.Shared.Services {
     public class LotteryGameService : ILotteryGameService {
         private readonly ILogger<ILotteryGameService> logger;
         private readonly IGameLogicService gameLogic;

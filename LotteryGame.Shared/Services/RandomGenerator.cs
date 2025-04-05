@@ -1,11 +1,6 @@
-﻿using LotteryGame.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LotteryGame.Shared.Services.Interfaces;
 
-namespace LotteryGame.Services {
+namespace LotteryGame.Shared.Services {
     public class RandomGenerator : IRandomGenerator {
         private static Random random = new Random();
 

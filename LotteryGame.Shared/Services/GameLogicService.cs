@@ -16,12 +16,23 @@ namespace LotteryGame.Shared.Services {
             this.lotteryGameSettings = settings.Value;
         }
 
-        public GameResult GenerateResult(IEnumerable<Player> players) {
+        public GameResult GenerateResult(int numberOfTicketsForPlayer) {
+            var numberOfCpuPlayers = GetNumberOfCpuPlayers();
+
+            var player = new Player(1, numberOfTicketsForPlayer);
+
+            var allPlayers = new List<Player> {
+                player
+            };
+
+            for (int i = 0; i < numberOfCpuPlayers; i++) {
+                allPlayers.Add(new Player(i + 2, GetRandomNumberOfTickets()));
+            }
             var result = new GameResult();
 
             var prizes = lotteryGameSettings.PrizeSettings;
 
-            var totalTickets = ticketService.GetAllTicketsForGame(players);
+            var totalTickets = ticketService.GetAllTicketsForGame(allPlayers);
 
             var totalPrizePot = totalTickets.Count() * lotteryGameSettings.CostPerTicket;
 

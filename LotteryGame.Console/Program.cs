@@ -32,7 +32,3 @@ await host.StartAsync();
 var lotteryGameService = host.Services.GetRequiredService<ILotteryGame>();
 lotteryGameService.PlayGame();
 Console.ReadKey();
-
-
-//tests to write
-//validate input prompt in AnsiConsole

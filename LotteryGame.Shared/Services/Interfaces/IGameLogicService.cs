@@ -2,6 +2,6 @@
     public interface IGameLogicService {
         int GetNumberOfCpuPlayers();
         int GetRandomNumberOfTickets();
-        GameResult GenerateResult(IEnumerable<Player> players);
+        GameResult GenerateResult(int numberOfTicketsForPlayer);
     }
 }

@@ -84,19 +84,15 @@ namespace LotteryGame.UnitTests {
                 }
             };
 
-            var players = new List<Player>() {
-                new Player(1, 2),
-                new Player(2, 2),
-                new Player(3, 2),
-            };
-
-            ticketServiceMock.Setup(x => x.GetAllTicketsForGame(players))
+            ticketServiceMock.Setup(x => x.GetAllTicketsForGame(It.IsAny<List<Player>>()))
                 .Returns(new List<int>() {1, 1, 2, 2, 3, 3});
+            randomGeneratorMock.Setup(x => x.GetRandomNumber(It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(2);
 
             service = new GameLogicService(randomGeneratorMock.Object, Options.Create(settings),
                 loggerMock.Object, ticketServiceMock.Object);
 
-            var result = service.GenerateResult(players);
+            var result = service.GenerateResult(2);
 
             result.Winners.Should().ContainKey("Grand prize");
             result.Winners["Grand prize"].Should().HaveCount(1);
@@ -116,16 +112,19 @@ namespace LotteryGame.UnitTests {
                         PercentageOfWinningTickets = 0.1,
                         PrizeShare = 0.3
                     }
-                }
+                },
+                MinNumberOfPlayers = 3,
+                MaxNumberOfPlayers = 3,
+                MinNumberOfTicketsPerPlayer = 1,
+                MaxNumberOfTicketsPerPlayer = 10
             };
 
-            var players = new List<Player>() {
-                new Player(1, 10),
-                new Player(2, 10),
-                new Player(3, 10),
-            };
+            randomGeneratorMock.Setup(x => x.GetRandomNumber(settings.MinNumberOfPlayers, settings.MaxNumberOfPlayers))
+                .Returns(3); //3 players
+            randomGeneratorMock.Setup(x => x.GetRandomNumber(settings.MinNumberOfTicketsPerPlayer, settings.MaxNumberOfTicketsPerPlayer))
+                .Returns(10); //10 tickets each
 
-            ticketServiceMock.Setup(x => x.GetAllTicketsForGame(players))
+            ticketServiceMock.Setup(x => x.GetAllTicketsForGame(It.IsAny<List<Player>>()))
                 .Returns(new List<int>() {
                     1, 2, 3,
                     1, 2, 3,
@@ -142,7 +141,7 @@ namespace LotteryGame.UnitTests {
             service = new GameLogicService(randomGeneratorMock.Object, Options.Create(settings),
                 loggerMock.Object, ticketServiceMock.Object);
 
-            var result = service.GenerateResult(players);
+            var result = service.GenerateResult(2);
             result.Winners.Should().ContainKey("Second prize");
             result.Winners["Second prize"].Should().HaveCount(3);
             result.Winners["Second prize"].Should().Contain(new List<int>() { 1, 2, 3 });
@@ -166,16 +165,20 @@ namespace LotteryGame.UnitTests {
                         PercentageOfWinningTickets = 0.1,
                         PrizeShare = 0.3
                     }
-                }
+                },
+                MinNumberOfPlayers = 3,
+                MaxNumberOfPlayers = 3,
+                MinNumberOfTicketsPerPlayer = 1,
+                MaxNumberOfTicketsPerPlayer = 10
             };
 
-            var players = new List<Player>() {
-                new Player(1, 10),
-                new Player(2, 10),
-                new Player(3, 10),
-            };
 
-            ticketServiceMock.Setup(x => x.GetAllTicketsForGame(players))
+            randomGeneratorMock.Setup(x => x.GetRandomNumber(settings.MinNumberOfPlayers, settings.MaxNumberOfPlayers))
+                .Returns(3); //3 players
+            randomGeneratorMock.Setup(x => x.GetRandomNumber(settings.MinNumberOfTicketsPerPlayer, settings.MaxNumberOfTicketsPerPlayer))
+                .Returns(10); //10 tickets each
+
+            ticketServiceMock.Setup(x => x.GetAllTicketsForGame(It.IsAny<List<Player>>()))
                 .Returns(new List<int>() {
                     1, 2, 3,
                     1, 2, 3,
@@ -192,7 +195,7 @@ namespace LotteryGame.UnitTests {
             service = new GameLogicService(randomGeneratorMock.Object, Options.Create(settings),
                 loggerMock.Object, ticketServiceMock.Object);
 
-            var result = service.GenerateResult(players);
+            var result = service.GenerateResult(2);
 
             //todo finish this
         }

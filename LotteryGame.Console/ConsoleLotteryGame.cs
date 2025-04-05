@@ -29,23 +29,13 @@ public class ConsoleLotteryGame : ILotteryGame {
                 .PromptStyle("green")
                 .Validate(tickets => tickets < gameSettings.MinNumberOfTicketsPerPlayer || tickets > gameSettings.MaxNumberOfTicketsPerPlayer ? ValidationResult.Error($"Please enter a number between {gameSettings.MinNumberOfTicketsPerPlayer} and {gameSettings.MaxNumberOfTicketsPerPlayer}") : ValidationResult.Success()));
 
-        var numberOfCpuPlayers = gameLogicService.GetNumberOfCpuPlayers();
-
-        var player = new Player(1, playerTickets);
-
-        var allPlayers = new List<Player> {
-                player
-            };
-
-        for (int i = 0; i < numberOfCpuPlayers; i++) {
-            allPlayers.Add(new Player(i + 2, gameLogicService.GetRandomNumberOfTickets()));
-        }
+        
 
         AnsiConsole.WriteLine($"You have bought {playerTickets} tickets.");
-        AnsiConsole.WriteLine($"There are {numberOfCpuPlayers} CPU players.");
+        AnsiConsole.WriteLine($"There are {gameLogicService.GetNumberOfCpuPlayers()} CPU players.");
 
 
-        var result = gameLogicService.GenerateResult(allPlayers);
+        var result = gameLogicService.GenerateResult(playerTickets);
 
         AnsiConsole.WriteLine(new string('*', 80));
         AnsiConsole.WriteLine("Results:");

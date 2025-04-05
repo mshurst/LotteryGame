@@ -1,4 +1,5 @@
-﻿using LotteryGame.Shared;
+﻿using LotteryGame.Console;
+using LotteryGame.Shared;
 using LotteryGame.Shared.Services;
 using LotteryGame.Shared.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -17,10 +18,10 @@ Log.Logger = new LoggerConfiguration()
 
 using var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((ctx, services) => {
-        services.AddScoped<ILotteryGameService, LotteryGameService>();
         services.AddScoped<IGameLogicService, GameLogicService>();
         services.AddScoped<ITicketService, TicketService>();
         services.AddSingleton<IRandomGenerator, RandomGenerator>();
+        services.AddScoped<ILotteryGame, ConsoleLotteryGame>();
         services.AddOptions<LotteryGameSettings>().Bind(configuration.GetSection("LotteryGameSettings")).ValidateDataAnnotations();
     })
     .UseSerilog()
@@ -28,8 +29,8 @@ using var host = Host.CreateDefaultBuilder(args)
 
 await host.StartAsync();
 
-var lotteryGameService = host.Services.GetRequiredService<ILotteryGameService>();
-await lotteryGameService.PlayGame();
+var lotteryGameService = host.Services.GetRequiredService<ILotteryGame>();
+lotteryGameService.PlayGame();
 Console.ReadKey();
 
 

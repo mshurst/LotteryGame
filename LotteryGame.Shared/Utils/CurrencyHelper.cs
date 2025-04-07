@@ -8,6 +8,6 @@ public class CurrencyHelper {
     }
 
     public string FormatCurrencyAsString(int amount) {
-        return $"{CurrencySymbol}{(amount / 100.0):F}";
+        return $"{CurrencySymbol}{(amount / 100.0):0.00}";
     }
 }

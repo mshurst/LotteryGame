@@ -45,13 +45,22 @@ public class ConsoleLotteryGame : ILotteryGame {
 
         foreach (var prize in result.Prizes) {
             var winners = result.Winners[prize.Key];
-            AnsiConsole.WriteLine("* {0}: Players {1} wins ${2} each",
-                prize.Key,
-                string.Join(",", winners.Distinct().Select(x => x)),
-                prize.Value / winners.Count / 100.00);
+            if (winners.Count > 1) {
+                AnsiConsole.WriteLine("* {0}: Players {1} wins {2} each",
+                    prize.Key,
+                    string.Join(",", winners.Distinct().Select(x => x)),
+                    currencyHelper.FormatCurrencyAsString(prize.Value / winners.Count));
+            }
+            else {
+                AnsiConsole.WriteLine("* {0}: Player {1} wins {2}",
+                    prize.Key,
+                    winners.First(),
+                    currencyHelper.FormatCurrencyAsString(prize.Value));
+            }
+            
         }
 
         AnsiConsole.WriteLine("Congratulations to the winners!");
-        AnsiConsole.WriteLine("** House Share : ${0} **", currencyHelper.FormatCurrencyAsString(result.HouseShare));
+        AnsiConsole.WriteLine("** House Share : {0} **", currencyHelper.FormatCurrencyAsString(result.HouseShare));
     }
 }

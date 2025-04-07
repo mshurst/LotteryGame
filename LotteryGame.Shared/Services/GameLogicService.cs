@@ -34,11 +34,14 @@ namespace LotteryGame.Shared.Services {
 
             var totalTickets = ticketService.GetAllTicketsForGame(allPlayers);
 
+            //we need to save this value here as tickets are removed from the array when they are not eligible for future prizes
+            var totalTicketCount = totalTickets.Count();
+
             var totalPrizePot = totalTickets.Count() * lotteryGameSettings.CostPerTicket;
 
             foreach (var prize in prizes) {
                 var numberOfWinners = prize.NumberOfWinningTickets 
-                                      ?? (int)Math.Ceiling((double)totalTickets.Count() * prize.PercentageOfWinningTickets.Value);
+                                      ?? (int)Math.Ceiling((double)totalTicketCount * prize.PercentageOfWinningTickets.Value);
 
                 var winningTickets = totalTickets.Take(numberOfWinners).ToList();
 

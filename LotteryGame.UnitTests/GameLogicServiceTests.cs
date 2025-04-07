@@ -197,7 +197,20 @@ namespace LotteryGame.UnitTests {
 
             var result = service.GenerateResult(2);
 
-            //todo finish this
+            result.Prizes.Count.Should().Be(2);
+            result.Winners.Should().ContainKey("Grand prize");
+            result.Winners["Grand prize"].Should().HaveCount(1);
+            result.Winners["Grand prize"].Should().Contain(1);
+            result.Prizes.Should().ContainKey("Grand prize");
+            result.Prizes["Grand prize"].Should().Be(1500);
+
+            result.Winners.Should().ContainKey("Second prize");
+            result.Winners["Second prize"].Should().HaveCount(3);
+            result.Winners["Second prize"].Should().Contain(new List<int>() { 1, 2, 3 });
+            result.Prizes.Should().ContainKey("Second prize");
+            result.Prizes["Second prize"].Should().Be(900);
+            result.HouseShare.Should().Be(600);
+
         }
     }
 }

@@ -10,13 +10,15 @@ namespace LotteryGame.Console;
 public class ConsoleLotteryGame : ILotteryGame {
     private readonly ILogger<ConsoleLotteryGame> logger;
     private readonly IGameLogicService gameLogicService;
+    private readonly ITicketService ticketService;
     private readonly LotteryGameSettings gameSettings;
     private readonly CurrencyHelper currencyHelper;
 
-    public ConsoleLotteryGame(ILogger<ConsoleLotteryGame> logger, IGameLogicService gameLogicService, IOptions<LotteryGameSettings> gameSettings, CurrencyHelper currencyHelper) {
+    public ConsoleLotteryGame(ILogger<ConsoleLotteryGame> logger, IGameLogicService gameLogicService, IOptions<LotteryGameSettings> gameSettings, CurrencyHelper currencyHelper, ITicketService ticketService) {
         this.logger = logger;
         this.gameLogicService = gameLogicService;
         this.currencyHelper = currencyHelper;
+        this.ticketService = ticketService;
         this.gameSettings = gameSettings.Value;
     }
     public void PlayGame() {
@@ -26,22 +28,28 @@ public class ConsoleLotteryGame : ILotteryGame {
         AnsiConsole.WriteLine("Welcome to the lottery game, Player 1!");
         AnsiConsole.WriteLine("Your current balance is {0}",currencyHelper.FormatCurrencyAsString(gameSettings.PlayerStartingBalance));
         AnsiConsole.WriteLine("Ticket Price : {0}", currencyHelper.FormatCurrencyAsString(gameSettings.CostPerTicket));
+        AnsiConsole.WriteLine(Environment.NewLine);
 
         var playerTickets = AnsiConsole.Prompt(
             new TextPrompt<int>("How many tickets do you want to buy?")
                 .PromptStyle("green")
-                .Validate(tickets => tickets < gameSettings.MinNumberOfTicketsPerPlayer || tickets > gameSettings.MaxNumberOfTicketsPerPlayer ? ValidationResult.Error($"Please enter a number between {gameSettings.MinNumberOfTicketsPerPlayer} and {gameSettings.MaxNumberOfTicketsPerPlayer}") : ValidationResult.Success()));
+                .Validate(tickets => tickets < gameSettings.MinNumberOfTicketsPerPlayer || tickets > gameSettings.MaxNumberOfTicketsPerPlayer ?
+                    ValidationResult.Error($"Please enter a number between {gameSettings.MinNumberOfTicketsPerPlayer} and {gameSettings.MaxNumberOfTicketsPerPlayer}") :
+                    ValidationResult.Success()));
 
-        
+        if (!ticketService.ValidateCanAffordTickets(playerTickets)) {
+            int newTickets = ticketService.AllocateMaxNumberOfTickets(gameSettings.PlayerStartingBalance, gameSettings.CostPerTicket);
+            AnsiConsole.WriteLine("You cannot afford to buy {0} tickets - you have purchased the maximum number available to you: {1}", playerTickets, newTickets);
+            playerTickets = newTickets;
+        }
 
         AnsiConsole.WriteLine($"You have bought {playerTickets} tickets.");
-        AnsiConsole.WriteLine($"There are {gameLogicService.GetNumberOfCpuPlayers()} CPU players.");
-
+        AnsiConsole.WriteLine($"{gameLogicService.GetNumberOfCpuPlayers()} other CPU players also have purchased tickets.");
 
         var result = gameLogicService.GenerateResult(playerTickets);
 
         AnsiConsole.WriteLine(new string('*', 80));
-        AnsiConsole.WriteLine("Results:");
+        AnsiConsole.WriteLine("Results:" + Environment.NewLine);
 
         foreach (var prize in result.Prizes) {
             var winners = result.Winners[prize.Key];
@@ -64,3 +72,5 @@ public class ConsoleLotteryGame : ILotteryGame {
         AnsiConsole.WriteLine("** House Share : {0} **", currencyHelper.FormatCurrencyAsString(result.HouseShare));
     }
 }
+
+//todo fix max random number (can't choose max value)

@@ -32,6 +32,8 @@ Configuration for the applicaton can be edited in the `appsettings.json` file in
 
 The following settings are available, all of which are nested inside the `LotteryGameSettings` object so they can be tightly bound to a C# class:
 
+(Note) All settings are mandatory (using the DataAnnotations Attributes) therefore the application will throw an exception upon startup if any required settings are missing
+
 - `CurrencySymbol` - Set this to whichever currency you wish to use (defaults to USD)
 - `MinNumberOfPlayers` - the minimum number of CPU players that will be randomly generated for a game
 - `MaxNumberofPlayers` - the maximum number of CPU players that will be randomly generated for a game

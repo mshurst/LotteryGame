@@ -22,8 +22,7 @@ public class ConsoleLotteryGame : ILotteryGame {
         this.gameSettings = gameSettings.Value;
     }
     public void PlayGame() {
-        logger.LogInformation("Doing stuff...");
-        logger.LogInformation("Max ticket size {tickets}", gameSettings.CostPerTicket);
+        logger.LogDebug("Max ticket size {tickets}", gameSettings.CostPerTicket);
 
         AnsiConsole.WriteLine("Welcome to the lottery game, Player 1!");
         AnsiConsole.WriteLine("Your current balance is {0}",currencyHelper.FormatCurrencyAsString(gameSettings.PlayerStartingBalance));

@@ -39,6 +39,9 @@ namespace LotteryGame.Shared.Services {
 
             var totalPrizePot = totalTickets.Count() * lotteryGameSettings.CostPerTicket;
 
+            logger.LogDebug("Total ticket count: {totalTicketCount}", totalTicketCount);
+            logger.LogDebug("Total prize pot: {totalPrizePot}", totalPrizePot);
+
             foreach (var prize in prizes) {
                 var numberOfWinners = prize.NumberOfWinningTickets 
                                       ?? (int)Math.Ceiling((double)totalTicketCount * prize.PercentageOfWinningTickets.Value);
@@ -48,10 +51,16 @@ namespace LotteryGame.Shared.Services {
                 totalTickets.RemoveRange(0, numberOfWinners);
 
                 result.Winners.Add(prize.Name, winningTickets);
-                result.Prizes.Add(prize.Name, (int)Math.Round(totalPrizePot * prize.PrizeShare));
+                var prizeAmount = (int)Math.Round(totalPrizePot * prize.PrizeShare);
+                result.Prizes.Add(prize.Name, prizeAmount);
+
+                logger.LogDebug("Prize {prizeName} - number of winners {winners} - prize each {prizeEach} - total prize {totalPrize}",
+                    prize.Name, numberOfWinners, prizeAmount/numberOfWinners, prizeAmount);
             }
 
             result.HouseShare = totalPrizePot - result.Prizes.Sum(x => x.Value);
+
+            logger.LogDebug("House share : {houseShare}", result.HouseShare);
 
             return result;
         }

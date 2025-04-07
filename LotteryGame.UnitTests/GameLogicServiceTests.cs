@@ -212,5 +212,52 @@ namespace LotteryGame.UnitTests {
             result.HouseShare.Should().Be(600);
 
         }
+
+        [Fact]
+        public void GenerateResult_WithNonEquallySharedPrize_ReturnsCorrectValue() {
+            var settings = new LotteryGameSettings() {
+                CostPerTicket = 123,
+                PrizeSettings = new List<PrizeSetting>() {
+                    new PrizeSetting() {
+                        Name = "Second prize",
+                        PercentageOfWinningTickets = 0.1,
+                        PrizeShare = 0.3
+                    }
+                },
+                MinNumberOfPlayers = 3,
+                MaxNumberOfPlayers = 3,
+                MinNumberOfTicketsPerPlayer = 1,
+                MaxNumberOfTicketsPerPlayer = 10
+            };
+
+            randomGeneratorMock.Setup(x => x.GetRandomNumber(settings.MinNumberOfPlayers, settings.MaxNumberOfPlayers))
+                .Returns(3); //3 players
+            randomGeneratorMock.Setup(x => x.GetRandomNumber(settings.MinNumberOfTicketsPerPlayer, settings.MaxNumberOfTicketsPerPlayer))
+                .Returns(9); //9 tickets each
+
+            ticketServiceMock.Setup(x => x.GetAllTicketsForGame(It.IsAny<List<Player>>()))
+                .Returns(new List<int>() {
+                    1, 2, 3,
+                    1, 2, 3,
+                    1, 2, 3,
+                    1, 2, 3,
+                    1, 2, 3,
+                    1, 2, 3,
+                    1, 2, 3,
+                    1, 2, 3,
+                    1, 2, 3,
+                });
+
+            service = new GameLogicService(randomGeneratorMock.Object, Options.Create(settings),
+                loggerMock.Object, ticketServiceMock.Object);
+
+            var result = service.GenerateResult(2);
+            result.Winners.Should().ContainKey("Second prize");
+            result.Winners["Second prize"].Should().HaveCount(3);
+            result.Winners["Second prize"].Should().Contain(new List<int>() { 1, 2, 3 }); //3 winners as 10% of (3x9) rounded
+            result.Prizes.Should().ContainKey("Second prize");
+            result.Prizes["Second prize"].Should().Be(996); //3x9 tickets * 123 cost per ticket, then 30% of this
+            result.HouseShare.Should().Be(2325); //3x9x123 - 996
+        }
     }
 }

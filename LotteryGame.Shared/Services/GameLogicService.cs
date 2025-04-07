@@ -45,7 +45,7 @@ namespace LotteryGame.Shared.Services {
                 totalTickets.RemoveRange(0, numberOfWinners);
 
                 result.Winners.Add(prize.Name, winningTickets);
-                result.Prizes.Add(prize.Name, totalPrizePot * prize.PrizeShare);
+                result.Prizes.Add(prize.Name, (int)Math.Round(totalPrizePot * prize.PrizeShare));
             }
 
             result.HouseShare = totalPrizePot - result.Prizes.Sum(x => x.Value);

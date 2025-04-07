@@ -1,5 +1,6 @@
 ﻿using LotteryGame.Shared;
 using LotteryGame.Shared.Services.Interfaces;
+using LotteryGame.Shared.Utils;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Spectre.Console;
@@ -10,10 +11,12 @@ public class ConsoleLotteryGame : ILotteryGame {
     private readonly ILogger<ConsoleLotteryGame> logger;
     private readonly IGameLogicService gameLogicService;
     private readonly LotteryGameSettings gameSettings;
+    private readonly CurrencyHelper currencyHelper;
 
-    public ConsoleLotteryGame(ILogger<ConsoleLotteryGame> logger, IGameLogicService gameLogicService, IOptions<LotteryGameSettings> gameSettings) {
+    public ConsoleLotteryGame(ILogger<ConsoleLotteryGame> logger, IGameLogicService gameLogicService, IOptions<LotteryGameSettings> gameSettings, CurrencyHelper currencyHelper) {
         this.logger = logger;
         this.gameLogicService = gameLogicService;
+        this.currencyHelper = currencyHelper;
         this.gameSettings = gameSettings.Value;
     }
     public void PlayGame() {
@@ -21,8 +24,8 @@ public class ConsoleLotteryGame : ILotteryGame {
         logger.LogInformation("Max ticket size {tickets}", gameSettings.CostPerTicket);
 
         AnsiConsole.WriteLine("Welcome to the lottery game, Player 1!");
-        AnsiConsole.WriteLine("Your current balance is {0}", gameSettings.PlayerStartingBalance / 100.00);
-        AnsiConsole.WriteLine("Ticket Price : {0}", gameSettings.CostPerTicket / 100.00);
+        AnsiConsole.WriteLine("Your current balance is {0}",currencyHelper.FormatCurrencyAsString(gameSettings.PlayerStartingBalance));
+        AnsiConsole.WriteLine("Ticket Price : {0}", currencyHelper.FormatCurrencyAsString(gameSettings.CostPerTicket));
 
         var playerTickets = AnsiConsole.Prompt(
             new TextPrompt<int>("How many tickets do you want to buy?")
@@ -49,6 +52,6 @@ public class ConsoleLotteryGame : ILotteryGame {
         }
 
         AnsiConsole.WriteLine("Congratulations to the winners!");
-        AnsiConsole.WriteLine("** House Share : ${0} **", result.HouseShare / 100.00);
+        AnsiConsole.WriteLine("** House Share : ${0} **", currencyHelper.FormatCurrencyAsString(result.HouseShare));
     }
 }

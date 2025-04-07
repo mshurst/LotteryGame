@@ -16,6 +16,8 @@ namespace LotteryGame.Shared {
         public int CostPerTicket { get; set; }
         [Required]
         public List<PrizeSetting> PrizeSettings { get; set; }
+        [Required]
+        public string CurrencySymbol { get; set; }
 
     }
 

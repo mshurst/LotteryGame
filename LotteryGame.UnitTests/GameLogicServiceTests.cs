@@ -74,7 +74,7 @@ namespace LotteryGame.UnitTests {
         [Fact]
         public void GenerateResult_WithSinglePrizeWithNumberOfWinningTickets_ReturnsCorrectResult() {
             var settings = new LotteryGameSettings() {
-                CostPerTicket = 1,
+                CostPerTicket = 100,
                 PrizeSettings = new List<PrizeSetting>() {
                     new PrizeSetting() {
                         Name = "Grand prize",
@@ -98,14 +98,14 @@ namespace LotteryGame.UnitTests {
             result.Winners["Grand prize"].Should().HaveCount(1);
             result.Winners["Grand prize"].Should().Contain(1);
             result.Prizes.Should().ContainKey("Grand prize");
-            result.Prizes["Grand prize"].Should().Be(3);
-            result.HouseShare.Should().Be(3);
+            result.Prizes["Grand prize"].Should().Be(300);
+            result.HouseShare.Should().Be(300);
         }
 
         [Fact]
         public void GenerateResult_WithSinglePrizeWithPercentageOfWinningTickets_ReturnsCorrectResult() {
             var settings = new LotteryGameSettings() {
-                CostPerTicket = 1,
+                CostPerTicket = 100,
                 PrizeSettings = new List<PrizeSetting>() {
                     new PrizeSetting() {
                         Name = "Second prize",
@@ -146,14 +146,14 @@ namespace LotteryGame.UnitTests {
             result.Winners["Second prize"].Should().HaveCount(3);
             result.Winners["Second prize"].Should().Contain(new List<int>() { 1, 2, 3 });
             result.Prizes.Should().ContainKey("Second prize");
-            result.Prizes["Second prize"].Should().Be(9);
-            result.HouseShare.Should().Be(21);
+            result.Prizes["Second prize"].Should().Be(900);
+            result.HouseShare.Should().Be(2100);
         }
 
         [Fact]
         public void GenerateResult_WithMultiplePrizes_ReturnsCorrectResult() {
             var settings = new LotteryGameSettings() {
-                CostPerTicket = 1,
+                CostPerTicket = 100,
                 PrizeSettings = new List<PrizeSetting>() {
                     new PrizeSetting() {
                         Name = "Grand prize",

@@ -72,5 +72,3 @@ public class ConsoleLotteryGame : ILotteryGame {
         AnsiConsole.WriteLine("** House Share : {0} **", currencyHelper.FormatCurrencyAsString(result.HouseShare));
     }
 }
-
-//todo fix max random number (can't choose max value)

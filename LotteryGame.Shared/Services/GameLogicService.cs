@@ -61,7 +61,7 @@ namespace LotteryGame.Shared.Services {
                 throw new ApplicationException("MinNumberOfPlayers cannot be greater than MaxNumberOfPlayers");
             }
 
-            return randomNumberGenerator.GetRandomNumber(lotteryGameSettings.MinNumberOfPlayers, lotteryGameSettings.MaxNumberOfPlayers);
+            return randomNumberGenerator.GetRandomNumber(lotteryGameSettings.MinNumberOfPlayers-1, lotteryGameSettings.MaxNumberOfPlayers-1);
         }
 
         public int GetRandomNumberOfTickets() {

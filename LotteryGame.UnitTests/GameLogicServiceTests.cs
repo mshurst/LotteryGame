@@ -15,42 +15,39 @@ namespace LotteryGame.UnitTests {
 
         [Fact]
         public void GetNumberOfCpuPlayers_MinGreaterThanMax_ThrowsException() {
-            // Arrange
             var settings = Options.Create(new LotteryGameSettings {
                 MinNumberOfPlayers = 10,
                 MaxNumberOfPlayers = 5
             });
             service = new GameLogicService(randomGeneratorMock.Object, settings, loggerMock.Object, ticketServiceMock.Object);
-            // Act & Assert
+
             Assert.Throws<ApplicationException>(() => service.GetNumberOfCpuPlayers());
             randomGeneratorMock.Verify(x => x.GetRandomNumber(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Fact]
         public void GetNumberOfCpuPlayers_ValidMinAndMax_ReturnsCorrectValue() {
-            // Arrange
             var settings = Options.Create(new LotteryGameSettings {
-                MinNumberOfPlayers = 1,
-                MaxNumberOfPlayers = 5
+                MinNumberOfPlayers = 10,
+                MaxNumberOfPlayers = 15
             });
             service = new GameLogicService(randomGeneratorMock.Object, settings, loggerMock.Object, ticketServiceMock.Object);
             randomGeneratorMock.Setup(x => x.GetRandomNumber(It.IsAny<int>(), It.IsAny<int>())).Returns(3);
-            // Act
+
             var result = service.GetNumberOfCpuPlayers();
-            // Assert
-            Assert.Equal(3, result);
-            randomGeneratorMock.Verify(x => x.GetRandomNumber(1, 5), Times.Once);
+
+            result.Should().Be(3);
+            randomGeneratorMock.Verify(x => x.GetRandomNumber(settings.Value.MinNumberOfPlayers-1, settings.Value.MaxNumberOfPlayers-1), Times.Once);
         }
 
         [Fact]
         public void GetRandomNumberOfTickets_MinGreaterThanMax_ThrowsException() {
-            // Arrange
             var settings = Options.Create(new LotteryGameSettings {
                 MinNumberOfTicketsPerPlayer = 10,
                 MaxNumberOfTicketsPerPlayer = 5
             });
             service = new GameLogicService(randomGeneratorMock.Object, settings, loggerMock.Object, ticketServiceMock.Object);
-            // Act & Assert
+
             Assert.Throws<ApplicationException>(() => service.GetRandomNumberOfTickets());
             randomGeneratorMock.Verify(x => x.GetRandomNumber(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
